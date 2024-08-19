@@ -1,26 +1,31 @@
 {
   "name": "rubabazanganizi-backend",
   "version": "1.0.0",
-  "description": "menya urwanda ndetse n'inkuru nyarwanda zitandukanye",
+  "description": "this project if for rubabazanganizi",
   "main": "index.js",
-  "devDependencies": {
-    "nodemon": "^3.1.4"
-  },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "jest"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "rubabazanganizi-BACKEND"
+  },
+  "author": "Yvonne IZERIMANA",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "express-validator": "^7.1.0",
-    "jsonwebtoken": "^9.0.2",
+    "express-validator": "^7.2.0",
     "mongodb": "^6.8.0",
-    "mongoose": "^8.4.4",
+    "mongoose": "^8.5.3",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0"
   }
 }
