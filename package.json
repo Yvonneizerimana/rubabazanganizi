@@ -9,6 +9,10 @@
     "start": "node index.js",
     "test": "jest"
   },
+  "jest": {
+  "transform": {
+    "^.+\\.js$": "babel-jest"
+  }},
   "repository": {
     "type": "git",
     "url": "rubabazanganizi-BACKEND"
@@ -17,13 +21,18 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.3",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.4",
     "supertest": "^7.0.0"

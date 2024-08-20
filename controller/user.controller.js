@@ -3,7 +3,7 @@ import {validationResult} from 'express-validator';
 import { BadRequestError } from '../errors/BadRequestError.js';
 import { NotFoundError} from '../errors/NotFoundError.js'
 import bcrypt from 'bcrypt'
-
+import jwt from 'jsonwebtoken'
 
 const userController={
     createUser: async(req,res,next)=>{
