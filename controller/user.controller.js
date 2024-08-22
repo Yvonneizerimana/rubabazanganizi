@@ -78,6 +78,20 @@ if(findUser && isMatch){
 
   const loggedUser=await findUser.save()
 
+  const sendGridKey=configurations.sendGridKey;
+
+  sgMail.setApiKey(sendGridKey);
+
+  const mailOptions = {
+      from: 'yvannyizerimana@gmail.com', 
+      to: req.body.email, 
+      subject: 'Account created !! ', 
+      html: `<B>Hello ${findUser.names},</B><br><br> Your OTP is ${findUser.otp}` // email body
+  };
+
+  await sgMail.send(mailOptions);
+     console.log('Email sent successfully');
+
         res.status(200).json({message:`Hey ${findUser.names}, Your OneTimePassword is ${findUser.otp}`})
         console.log(loggedUser)
       }
@@ -128,6 +142,20 @@ try{
      generateNewOtp.otp=otp
 
 await generateNewOtp.save()
+
+const sendGridKey=configurations.sendGridKey;
+
+sgMail.setApiKey(sendGridKey);
+
+const mailOptions = {
+    from: 'yvannyizerimana@gmail.com', 
+    to: req.body.email, 
+    subject: 'Account created !! ', 
+    html: `<B>Hello ${generateNewOtp.names},</B><br><br> Your New OTP is ${generateNewOtp.otp}` // email body
+};
+
+await sgMail.send(mailOptions);
+   console.log('Email sent successfully');
 
 res.status(200).json({message:`new otp generated successfuly ${generateNewOtp.otp}`})
     }
