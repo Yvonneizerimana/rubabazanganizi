@@ -30,19 +30,21 @@ password:{
     type:String,
     required:true,
     minlength:8,
-    validate:{
-        validator:function(v){
-            return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v);
-        },
-        message:'Password must contain at least 8 characters, including uppercase letters, lowercase letters, numbers, and special characters'
-    },
+    
 },
 confirmPassword:{
     type:String,
     required:true,
+},
+
+otp:{
+    type:Number,
+    default:null
+},
+otpExpires:{
+    type:Date,
+    default:null
 }
-
-
     }
 )
 

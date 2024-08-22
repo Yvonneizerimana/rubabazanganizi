@@ -5,6 +5,7 @@ import { NotFoundError} from '../errors/NotFoundError.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
+
 const userController={
     createUser: async(req,res,next)=>{
       const errors=validationResult(req)
@@ -36,6 +37,7 @@ const userController={
     },
 
     loginUser:async(req,res,next) => {
+
       const {email,password}=req.body
 
       try{
@@ -47,13 +49,77 @@ const userController={
          if(!isMatch){
             return next(new Error('Invalid credentials'));
          }
-         res.status(200).json({message:`Hey ${findUser.names}, Welcome to our page`})
+if(findUser && isMatch){
+   const otpGenerator=()=>{
+      let otp=0;
+      otp=Math.ceil(Math.random()*1000000)
+      return otp
+  }
+  const otp=otpGenerator()
+  findUser.otpExpires=Date.now() + 10 * 60 * 1000;
+  findUser.otp=otp
+
+  const loggedUser=await findUser.save()
+
+        res.status(200).json({message:`Hey ${findUser.names}, Your OneTimePassword is ${findUser.otp}`})
+        console.log(loggedUser)
       }
+   }
       catch(err){
          console.log(err.message)
-         return next(new Error('Internal server error'));
+       res.status(500).json({message:"Internal server error"})
       }
+    },
+
+    verifyOtp:async(req,res,next)=>{
+
+      const errors=validationResult(req)
+      if(!errors.isEmpty()){
+        return next(new BadRequestError(errors.array()[0].msg))
+       
+      }
+
+      const findUserByOtp= await userModel.findOne({otp:req.body.otp})
+
+      if(!findUserByOtp){
+         next(new BadRequestError(errors.array()[0].msg))
+      }
+
+      if(findUserByOtp.otpExpires < new Date().getTime()){
+           res.status(401).json({message:"The otp has been expired"})
+      }
+      res.status(200).json({message:"welcome to our page,.........."})
+    },
+
+    generateNewOtp:async(req,res,next)=>{
+try{
+      
+      const generateNewOtp= await userModel.findOne({email:req.body.email})
+
+      if(!generateNewOtp){
+         res.status(404).json({message:`User with email ${email} not found`})
+      }
+     
+      const otpGenerator=()=>{
+         let otp=0;
+         otp=Math.ceil(Math.random()*1000000)
+         return otp
+     }
+
+     const otp=otpGenerator()
+     generateNewOtp.otpExpires= Date.now() + 10 * 60 * 1000;
+     generateNewOtp.otp=otp
+
+await generateNewOtp.save()
+
+res.status(200).json({message:`new otp generated successfuly ${generateNewOtp.otp}`})
     }
+    
+   catch(error){
+      console.log(error.message)
+      res.status(500).json({message:"Internal server error"})
+   }
+   }
 }
 
 export default userController;
