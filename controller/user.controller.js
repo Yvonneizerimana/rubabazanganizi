@@ -15,7 +15,7 @@ const userController={
       if(!errors.isEmpty()){
         return next(new BadRequestError(errors.array()[0].msg))
       }
- const {names, phone, email,password, confirmPassword}=req.body
+ const {names, phone, email,role,password, confirmPassword}=req.body
      
  try{
      const existingUser= await userModel.findOne({email})
@@ -28,6 +28,7 @@ const userController={
       names,
       phone,
       email,
+      role,
       password,
       confirmPassword,
      })
@@ -85,7 +86,7 @@ if(findUser && isMatch){
   const mailOptions = {
       from: 'yvannyizerimana@gmail.com', 
       to: req.body.email, 
-      subject: 'Account created !! ', 
+      subject: 'OTP generated!! ', 
       html: `<B>Hello ${findUser.names},</B><br><br> Your OTP is ${findUser.otp}` // email body
   };
 
@@ -150,7 +151,7 @@ sgMail.setApiKey(sendGridKey);
 const mailOptions = {
     from: 'yvannyizerimana@gmail.com', 
     to: req.body.email, 
-    subject: 'Account created !! ', 
+    subject: 'New otp Generated!! ', 
     html: `<B>Hello ${generateNewOtp.names},</B><br><br> Your New OTP is ${generateNewOtp.otp}` // email body
 };
 
@@ -185,6 +186,19 @@ res.status(200).json({message:`new otp generated successfuly ${generateNewOtp.ot
 
          await user.save()
 
+         const sendGridKey=configurations.sendGridKey;
+
+         sgMail.setApiKey(sendGridKey);
+       
+         const mailOptions = {
+             from: 'yvannyizerimana@gmail.com', 
+             to: req.body.email, 
+             subject: 'Reset password !! ', 
+             html: `<B>Hello ${user.names},</B><br><br> Your ResetToken is ${user.resetToken}` // email body
+         };
+       
+         await sgMail.send(mailOptions);
+            console.log('Email sent successfully');
          res.status(200).json({resetToken:`${user.resetToken}`})
    },
 
@@ -202,9 +216,22 @@ res.status(200).json({message:`new otp generated successfuly ${generateNewOtp.ot
    verifyToken.confirmPassword=req.body.confirmPassword
    verifyToken.resetToken=undefined
    verifyToken.resetTokenExpires=undefined
-
+   
    await verifyToken.save()
 
+   const sendGridKey=configurations.sendGridKey;
+
+   sgMail.setApiKey(sendGridKey);
+ 
+   const mailOptions = {
+       from: 'yvannyizerimana@gmail.com', 
+       to: req.body.email, 
+       subject: 'Password changed !! ', 
+       html: `<B>Hello ${verifyToken.names},</B><br><br> Your Password has been changed successfuly ` // email body
+   };
+ 
+   await sgMail.send(mailOptions);
+      console.log('Email sent successfully');
    res.status(200).json({message:"Password changed successfully"})
    }
       

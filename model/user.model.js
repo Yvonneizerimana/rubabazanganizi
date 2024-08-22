@@ -26,6 +26,14 @@ const userModel=new mongoose.Schema(
             unique:true,
             isEmail:true,
         },
+        role:{
+            type:String,
+            required:true,
+            enum:{
+                values:["user","admin"],
+                message:"{values} invalid role"
+            }
+        },
 password:{
     type:String,
     required:true,
