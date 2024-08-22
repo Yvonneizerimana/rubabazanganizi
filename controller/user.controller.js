@@ -4,6 +4,9 @@ import { BadRequestError } from '../errors/BadRequestError.js';
 import { NotFoundError} from '../errors/NotFoundError.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
+import sgMail from '@sendgrid/mail'
+import configurations  from '../configs/index.js';
 
 
 const userController={
@@ -28,6 +31,20 @@ const userController={
       password,
       confirmPassword,
      })
+
+     const sendGridKey=configurations.sendGridKey;
+
+     sgMail.setApiKey(sendGridKey);
+
+     const mailOptions = {
+         from: 'yvannyizerimana@gmail.com', 
+         to: req.body.email, 
+         subject: 'Account created !! ', 
+         html: `<B>Hello ${newUser.names},</B><br><br> Thank you for being the member of iwacu cyera system, your account has been created successfully!!` // email body
+     };
+
+     await sgMail.send(mailOptions);
+     console.log('Email sent successfully');
      res.status(200).json({message:'User created successfully'})
  }
  catch(err){
@@ -119,7 +136,51 @@ res.status(200).json({message:`new otp generated successfuly ${generateNewOtp.ot
       console.log(error.message)
       res.status(500).json({message:"Internal server error"})
    }
+   },
+
+   forgotPassword:async(req,res,next)=>{
+
+      const user=await userModel.findOne({email:req.body.email})
+
+         if(!user){
+    res.status(404).json({message:"user not found"})
+         }
+
+         function generateRandomToken(){
+       return crypto.randomBytes(20).toString('hex');
+         }
+
+         const resetToken=generateRandomToken();
+
+         user.resetToken=resetToken;
+         user.resetTokenExpires=Date.now() + 1 * 60 * 1000
+
+         await user.save()
+
+         res.status(200).json({resetToken:`${user.resetToken}`})
+   },
+
+   changePassword:async(req,res,next)=>{
+      const verifyToken=await userModel.findOne({resetToken:req.params.resetToken})
+
+   if(!verifyToken){
+      res.status(400).json({message:"Inalid token"})
    }
-}
+   if(verifyToken.resetToken < new Date().getTime()){
+      res.status(401).json({message:"your token has been expired"})
+   }
+   
+   verifyToken.password=req.body.newPassword
+   verifyToken.confirmPassword=req.body.confirmPassword
+   verifyToken.resetToken=undefined
+   verifyToken.resetTokenExpires=undefined
+
+   await verifyToken.save()
+
+   res.status(200).json({message:"Password changed successfully"})
+   }
+      
+   }
+
 
 export default userController;

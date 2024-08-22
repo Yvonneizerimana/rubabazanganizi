@@ -44,6 +44,12 @@ otp:{
 otpExpires:{
     type:Date,
     default:null
+},
+resetToken:{
+    type:String
+},
+resetTokenExpires:{
+    type:String
 }
     }
 )
