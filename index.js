@@ -4,19 +4,30 @@ import routerUser from './routes/index.js';
 import configuration from './configs/index.js';
 import swaggerUi from 'swagger-ui-express';
 import documentation from './doc/swaggerDocumentation.js'
+import cors from 'cors'
 
 const app = express();
 app.use(express.json())
 const db = configuration.CONNECTION;
 const port = configuration.PORT;
 
+const corsOptions={
+    origin:[
+"http://localhost:5173/",
+
+    ],
+methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+allowedHeaders: "Content-Type, Authorization",
+credentials: true,
+}
 // Middleware setup
+app.use(cors(corsOptions))
 app.use("/api-documentation", swaggerUi.serve);
 app.use("/api-documentation",swaggerUi.setup(documentation))
 
 app.use('/api/v1', routerUser);
 // Connect to MongoDB
-mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(db)
     .then(() => {
         console.log('Connected to MongoDB');
         app.listen(port, () => {
