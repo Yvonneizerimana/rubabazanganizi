@@ -4,7 +4,8 @@ dotenv.config()
 const configuration={
     CONNECTION:process.env.MONGO_URI,
     PORT:process.env.PORT,
-    sendGridKey:process.env.SENDGRID_KEY 
+    sendGridKey:process.env.SENDGRID_KEY,
+    tokenSecretKey:process.env.TOKEN_SECRET_KEY
 }
 
 export default configuration;

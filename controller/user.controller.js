@@ -120,8 +120,23 @@ if(findUser && isMatch){
       if(findUserByOtp.otpExpires < new Date().getTime()){
            res.status(401).json({message:"The otp has been expired"})
       }
-      res.status(200).json({message:"welcome to our page,.........."})
-    },
+
+      if(findUserByOtp.otpExpires > new Date().getTime()){
+         const token=jwt.sign({
+            email:findUserByOtp.email,
+            id:findUserByOtp._id
+      },configurations.tokenSecretKey,{expiresIn:"5m"})
+
+      
+      const options = {
+         expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+         httpOnly: true
+       };
+  res.cookie("Token",token,options).status(200).json({
+   success:true,
+   user:findUserByOtp
+  })
+    }},
 
     generateNewOtp:async(req,res,next)=>{
 try{
