@@ -114,7 +114,7 @@ if(findUser && isMatch){
       const findUserByOtp= await userModel.findOne({otp:req.body.otp})
 
       if(!findUserByOtp){
-         next(new BadRequestError(errors.array()[0].msg))
+         res.status(401).json({message:"Invalid OTP"})
       }
 
       if(findUserByOtp.otpExpires < new Date().getTime()){
@@ -221,7 +221,7 @@ res.status(200).json({message:`new otp generated successfuly ${generateNewOtp.ot
       const verifyToken=await userModel.findOne({resetToken:req.params.resetToken})
 
    if(!verifyToken){
-      res.status(400).json({message:"Inalid token"})
+      res.status(400).json({message:"Invalid Token"})
    }
    if(verifyToken.resetToken < new Date().getTime()){
       res.status(401).json({message:"your token has been expired"})

@@ -1,7 +1,9 @@
 import express from 'express'
 import userRouter from "./user.route.js";
-const routerUser=express.Router()
+import bookRouter from "./book.route.js";
+const router=express.Router()
 
-routerUser.use('/user',userRouter)
+router.use('/user',userRouter)
+router.use('/book',bookRouter)
 
-export default routerUser;
+export default router;
