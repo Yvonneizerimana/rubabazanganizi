@@ -262,8 +262,8 @@ const swaggerDocumentation={
           },
 
 
-    "/book/updateBook": {
-            post: {
+    "/book/updateBook/{id}": {
+            put: {
               summary: "update a book",
               tags: ["books"],
               consumes: ["multipart/form-data"],
@@ -349,7 +349,7 @@ const swaggerDocumentation={
           },
 
 
-          "/book/getAllBooks/{id}": {
+          "/book/getAllBooks": {
             get: {
               summary: "get all books",
               tags: ["books"],
