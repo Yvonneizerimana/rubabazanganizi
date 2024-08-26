@@ -70,8 +70,8 @@ const bookController = {
 
     getBookById: async (req, res,next) => {
         try{
-        const id  = req.params;
-        const getBook=await findById({_id:id})
+    
+        const getBook=await bookModel.findById({_id:req.params.id})
         if(!getBook){
             return res.status(404).json({ message: 'Book not found' });
         }
