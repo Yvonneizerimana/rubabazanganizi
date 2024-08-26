@@ -58,6 +58,34 @@ const bookController = {
         }
     },
 
+    getAllBooks:async(req, res,next) => {
+        try {
+            const books = await bookModel.find({});
+            res.status(200).json(books);
+        } catch (error) {
+            console.log("Error fetching books:", error.message);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    },
+
+    getBookById: async (req, res,next) => {
+        try{
+        const id  = req.params;
+        const getBook=await findById({_id:id})
+        if(!getBook){
+            return res.status(404).json({ message: 'Book not found' });
+        }
+        res.status(200).json({
+            Message: "book retrieved successfully",
+            Book:getBook
+        });
+    }
+    catch(err){
+        console.log("Error fetching book:", err.message);
+        res.status(500).json({ message: "Internal server error" });
+    }
+    },
+
     updateBook: async (req, res) => {
         const { id } = req.params; 
         const { title, author, description, price, category } = req.body;
