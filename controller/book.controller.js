@@ -56,7 +56,43 @@ const bookController = {
             console.log("Error uploading book:", error.message);
             res.status(500).json({ message: "Internal server error" });
         }
+    },
+
+    updateBook: async (req, res) => {
+        const { id } = req.params; 
+        const { title, author, description, price, category } = req.body;
+        const file = req.files ? req.files.file : null;
+
+        try {
+            
+            const book = await bookModel.findById(id);
+            if (!book) {
+                return res.status(404).json({ message: 'Book not found' });
+            }
+
+            if (title) book.title = title;
+            if (author) book.author = author;
+            if (description) book.description = description;
+            if (price) book.price = price;
+            if (category) book.category = category;
+
+          
+            if (file) {
+                const storageRef = ref(storage, 'uploads/' + file.name);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadUrl = await getDownloadURL(snapshot.ref);
+                book.book = downloadUrl; 
+            }
+
+            await book.save();
+
+            res.status(200).json(book);
+        } catch (error) {
+            console.log("Error updating book:", error.message);
+            res.status(500).json({ message: "Internal server error" });
+        }
     }
+
 };
 
 export default bookController;
