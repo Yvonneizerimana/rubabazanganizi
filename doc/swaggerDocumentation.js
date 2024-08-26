@@ -12,7 +12,8 @@ const swaggerDocumentation={
     basePath:"/api/v1",
     tags:{
         name:[
-            {name:"users", description:"users API"}
+            {name:"users", description:"users API"},
+            {name:"books", description:"books API"}
         ]
     },
     paths:{
@@ -180,7 +181,186 @@ const swaggerDocumentation={
                 },
              }
             }
-        }
+        },
+
+        "/book/addBook": {
+            post: {
+              summary: "add a new book",
+              tags: ["books"],
+              consumes: ["multipart/form-data"],
+              parameters: [
+                {
+                  in: "formData",
+                  name: "title",
+                  type: "string",
+                  description: "book title",
+                  required: true,
+                },
+                {
+                  in: "formData",
+                  name: "author",
+                  type: "string",
+                  description: "book author",
+                  required: true,
+                },
+                {
+                  in: "formData",
+                  name: "description",
+                  type: "string",
+                  description: "book description",
+                  required: true,
+                },
+                {
+                  in: "formData",
+                  name: "price",
+                  type: "number",
+                  description: "book price",
+                  required: true,
+                },
+                {
+                  in: "formData",
+                  name: "category",
+                  type: "string",
+                  description: "book category",
+                  required: true,
+                },
+                
+                {
+                  in: "formData",
+                  name: "file",
+                  type: "file",
+                  description: "upload book here",
+                  required: true,
+                },
+              ],
+              responses: {
+                200: {
+                  description: "book added successfully",
+                },
+              },
+            }},
+          "/book/deleteBook/{id}": {
+            delete: {
+              summary: "Delete a book",
+              tags: ["books"],
+              security: [{ BearerAuth: [] }],
+              parameters: [
+                {
+                  in: "path",
+                  name: "id",
+                  type: "string",
+                  required: true,
+                  description: "ID of book to delete",
+                },
+              ],
+              responses: {
+                200: {
+                  description: "book deleted successfully",
+                },
+              },
+            },
+          },
+
+
+    "/book/updateBook": {
+            post: {
+              summary: "update a book",
+              tags: ["books"],
+              consumes: ["multipart/form-data"],
+              parameters: [
+                {
+                    in: "path",
+                    name: "id",
+                    type: "string",
+                    required: true,
+                    description: "ID of the book to update",
+                  },
+                {
+                  in: "formData",
+                  name: "title",
+                  type: "string",
+                  description: "book title",
+                 
+                },
+                {
+                  in: "formData",
+                  name: "author",
+                  type: "string",
+                  description: "book author",
+                
+                },
+                {
+                  in: "formData",
+                  name: "description",
+                  type: "string",
+                  description: "book description",
+                 
+                },
+                {
+                  in: "formData",
+                  name: "price",
+                  type: "number",
+                  description: "book price",
+                  
+                },
+                {
+                  in: "formData",
+                  name: "category",
+                  type: "string",
+                  description: "book category",
+                 
+                },
+                
+                {
+                  in: "formData",
+                  name: "file",
+                  type: "file",
+                  description: "upload book here",
+                 
+                },
+              ],
+              responses: {
+                200: {
+                  description: "Book updated successfully",
+                },
+              },
+            },
+          },
+          "/book/getOneBook/{id}": {
+            get: {
+              summary: "get one book",
+              tags: ["books"],
+              security: [{ BearerAuth: [] }],
+              parameters: [
+                {
+                  in: "path",
+                  name: "id",
+                  type: "string",
+                  required: true,
+                  description: "ID of the book to get one book",
+                },
+              ],
+              responses: {
+                200: {
+                  description: "book retrieved successfully",
+                },
+              },
+            },
+          },
+
+
+          "/book/getAllBooks/{id}": {
+            get: {
+              summary: "get all books",
+              tags: ["books"],
+              security: [{ BearerAuth: [] }],
+              responses: {
+                200: {
+                  description: "here is the list of all books",
+                },
+              },
+            },
+          },
 
     },
 
@@ -243,6 +423,21 @@ const swaggerDocumentation={
         }
 
 
+        },
+
+        Book:{
+            addBook:{
+                type:"object",
+                required:["file","title","author","description","price","category"],
+                properties:{
+                    file:{type:"string",format:"binary"},
+                    title:{type:"string"},
+                    author:{type:"string"},
+                    description:{type:"string"},
+                    price:{type:"number",format:"float"},
+                    category:{type:"string"}
+                }
+            }
         }
     },
 }
