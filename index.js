@@ -27,7 +27,7 @@ app.use(cors(corsOptions))
 app.use("/api-documentation", swaggerUi.serve);
 app.use("/api-documentation",swaggerUi.setup(documentation))
 
-app.use('/api/v1', router);
+app.use('/', router);
 // Connect to MongoDB
 mongoose.connect(db)
     .then(() => {
