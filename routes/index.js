@@ -3,7 +3,7 @@ import userRouter from "./user.route.js";
 import bookRouter from "./book.route.js";
 const router=express.Router()
 
-router.use('/user',userRouter)
-router.use('/book',bookRouter)
+router.get('/user',userRouter)
+router.get('/book',bookRouter)
 
 export default router;

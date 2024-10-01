@@ -37,10 +37,7 @@ app.use('/api/v1', router);
 app.get('/',router);
 
 // Connect to MongoDB
-mongoose.connect(db, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(db)
   .then(() => {
     console.log('Connected to MongoDB');
     app.listen(port, () => {
