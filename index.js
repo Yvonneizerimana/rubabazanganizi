@@ -33,8 +33,10 @@ app.use("/api-documentation", swaggerUi.serve, swaggerUi.setup(documentation));
 // Use the router for all routes
 app.use('/api/v1', router);
 
-// Fallback route for unhandled routes
-app.get('/',router);
+// Remove or comment out the fallback route
+// app.get('/', (req, res) => {
+//   res.send("Welcome to the API");
+// });
 
 // Connect to MongoDB
 mongoose.connect(db)
