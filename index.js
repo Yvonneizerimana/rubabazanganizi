@@ -17,10 +17,7 @@ const port = configuration.PORT || 3000; // Default to port 3000 if not provided
 
 // CORS options
 const corsOptions = {
-  origin: [
-    "http://localhost:5173", // Adjust this URL to match your frontend's deployed URL on Render
-    "https://your-frontend-url.netlify.app" // Example: Allow your frontend hosted on Netlify
-  ],
+ 
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Content-Type, Authorization",
   credentials: true,

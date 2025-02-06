@@ -13,7 +13,8 @@ const swaggerDocumentation={
     tags:{
         name:[
             {name:"users", description:"users API"},
-            {name:"books", description:"books API"}
+            {name:"books", description:"books API"},
+            {name:"contacts", description:"contacts API"}
         ]
     },
     paths:{
@@ -229,8 +230,22 @@ const swaggerDocumentation={
                   in: "formData",
                   name: "file",
                   type: "file",
-                  description: "upload book here",
-                  required: true,
+                  description: "upload book image ",
+                  
+                },
+                {
+                  in: "formData",
+                  name: "bookFile",
+                  type: "file",
+                  description: "upload book",
+                  
+                },
+                {
+                  in: "formData",
+                  name: "imageFile",
+                  type: "file",
+                  description: "upload book image",
+                  
                 },
               ],
               responses: {
@@ -315,7 +330,14 @@ const swaggerDocumentation={
                   in: "formData",
                   name: "file",
                   type: "file",
-                  description: "upload book here",
+                  description: "upload book image",
+                 
+                },
+                {
+                  in: "formData",
+                  name: "file",
+                  type: "file",
+                  description: "upload book",
                  
                 },
               ],
@@ -361,7 +383,31 @@ const swaggerDocumentation={
               },
             },
           },
+       
+    "/contacts/create":{
+            post:{
+                summary:"create a new contact",
+                tags:["contacts"],
+                consumes:["application/json"],
+                parameters:[
+                    {
+                        in:"body",
+                        name:"body",
+                        description:"enter contact data",
+                        required:true,
+                        schema:{
+                            $ref:"#/database/User/Contact"
+                        } 
+                    }
+                ],
+                responses:{
+                    200:{
+                        description:"User created successfuly"
+                    },
+                }
 
+            }
+        },
     },
 
     database:{
@@ -428,8 +474,9 @@ const swaggerDocumentation={
         Book:{
             addBook:{
                 type:"object",
-                required:["file","title","author","description","price","category"],
+                required:["title","author","description","price","category"],
                 properties:{
+                    file:{type:"string",format:"binary"},
                     file:{type:"string",format:"binary"},
                     title:{type:"string"},
                     author:{type:"string"},
@@ -438,7 +485,26 @@ const swaggerDocumentation={
                     category:{type:"string"}
                 }
             }
-        }
+        },
+        Contact: {
+          type: "object",
+          required: ["name", "email", "message"],
+          properties: {
+            name: {
+              type: "string",
+              description: "Name of the contact person",
+            },
+            email: {
+              type: "string",
+              description: "Contact email address",
+            },
+            message: {
+              type: "string",
+              description: "Message from the contact",
+            },
+          },
+        },
+      
     },
 }
 export default swaggerDocumentation

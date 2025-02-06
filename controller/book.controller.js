@@ -26,19 +26,23 @@ const bookController = {
   
     uploadAndAddBook: async (req, res) => {
         
-        if (!req.files || !req.files.file) {
+        if (!req.files || !req.files.book || !req.files.image) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
-        const { title, author, description, price, category } = req.body;
-        const file = req.files.file;
+         const { title, author, description, price, category } = req.body;
+        const bookFile = req.files.book;
+        const imageFile = req.files.image;
 
         try {
             
-            const storageRef = ref(storage, 'uploads/' + file.name);
-            const snapshot = await uploadBytes(storageRef, file);
-            const downloadUrl = await getDownloadURL(snapshot.ref);
-
+            const bookStorageRef = ref(storage, 'uploads/books' + bookFile.name);
+            const bookSnapshot = await uploadBytes(bookStorageRef, file);
+            const bookDownloadUrl = await getDownloadURL(bookSnapshot.ref);
+            
+            const imageStorageRef = ref(storage, 'uploads/images' + imageFile.name);
+            const imageSnapshot = await uploadBytes(imageStorageRef, file);
+            const imageDownloadUrl = await getDownloadURL(imageSnapshot.ref);
             
             const newBook = new bookModel({
                 title,
@@ -46,7 +50,9 @@ const bookController = {
                 description,
                 price,
                 category,
-                book: downloadUrl
+                bookImage:imageDownloadUrl,
+                book: bookDownloadUrl,
+
             });
 
             await newBook.save();
@@ -109,6 +115,7 @@ const bookController = {
                 const storageRef = ref(storage, 'uploads/' + file.name);
                 const snapshot = await uploadBytes(storageRef, file);
                 const downloadUrl = await getDownloadURL(snapshot.ref);
+                book.bookImage = downloadUrl;  
                 book.book = downloadUrl; 
             }
 

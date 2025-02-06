@@ -1,34 +1,29 @@
 import mongoose from 'mongoose';
-const bookModel=new mongoose.Schema({
-    title:{
+const contactModel=new mongoose.Schema({
+    firstname:{
         type:String,
         required:true
     },
-    author:{
+    lastname:{
         type:String,
         required:true
     },
-    description:{
+    email:{
         type:String,
         required:true
     },
-    price:{
+    country:{
         type:Number,
         required:true
     },
-    category:{
+    phoneNumber:{
         type:String,
         required:true
     },
-    bookImage:{
-      type: String,
-      required: true,
-      default: 'no-image.jpg'
-    },
-    book:{
+    message:{
         type:String,
-        required:true
+        
     }
 })
 
-export default mongoose.model('Books',bookModel);
+export default mongoose.model('Contacts',contactModel);
