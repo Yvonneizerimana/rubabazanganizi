@@ -27,68 +27,67 @@ const bookController = {
     uploadAndAddBook: async (req, res) => {
         if (!req.files || !req.files.book || !req.files.image) {
             return res.status(400).json({ message: 'No file uploaded' });
-          }
-      
-          // Extract other fields and the uploaded files
-          const { title, author, description, price, category } = req.body;
-          const bookFile = req.files.book;  // The book file
-          const imageFile = req.files.image;  // The image file
-      
-          const allowedBookTypes = [
+        }
+
+        const { title, author, description, price, category } = req.body;
+        const bookFile = req.files.book;  // The book file
+        const imageFile = req.files.image;  // The image file
+
+        const allowedBookTypes = [
             'application/pdf',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // Word Document (docx)
-          ];
-          // Allowed MIME types for image files
-          const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      
-          // Validate the MIME type of the book file
-          if (!allowedBookTypes.includes(bookFile.mimetype)) {
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Word Document (docx)
+        ];
+
+        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+        // Validate the MIME type of the book file
+        if (!allowedBookTypes.includes(bookFile.mimetype)) {
             return res.status(400).json({ message: 'Invalid book file type. Only PDF and Word files are allowed.' });
-          }
-      
-          // Validate the MIME type of the image file
-          if (!allowedImageTypes.includes(imageFile.mimetype)) {
+        }
+
+        // Validate the MIME type of the image file
+        if (!allowedImageTypes.includes(imageFile.mimetype)) {
             return res.status(400).json({ message: 'Invalid image file type. Only JPEG, PNG, and JPG files are allowed.' });
-          }
-      
-          try {
+        }
+
+        try {
             // Upload the book file to Firebase Storage
             const bookStorageRef = ref(storage, 'uploads/books/' + bookFile.name);
             const bookMetadata = {
-              contentType: bookFile.mimetype,  // Ensure the content type is set for the book file
+                contentType: bookFile.mimetype,  // Ensure the content type is set for the book file
             };
             const bookSnapshot = await uploadBytes(bookStorageRef, bookFile, bookMetadata);
             const bookDownloadUrl = await getDownloadURL(bookSnapshot.ref);
-      
+
             // Upload the image file to Firebase Storage
             const imageStorageRef = ref(storage, 'uploads/images/' + imageFile.name);
             const imageMetadata = {
-              contentType: imageFile.mimetype,  // Ensure the content type is set for the image file
+                contentType: imageFile.mimetype,  // Ensure the content type is set for the image file
             };
             const imageSnapshot = await uploadBytes(imageStorageRef, imageFile, imageMetadata);
             const imageDownloadUrl = await getDownloadURL(imageSnapshot.ref);
-      
+
             // Create a new book document with the download URLs
             const newBook = new bookModel({
-              title,
-              author,
-              description,
-              price,
-              category,
-              bookImage: imageDownloadUrl,
-              book: bookDownloadUrl,
+                title,
+                author,
+                description,
+                price,
+                category,
+                bookImage: imageDownloadUrl,
+                book: bookDownloadUrl,
             });
-      
+
             // Save the new book document to the database
             await newBook.save();
-      
+
             // Send the new book as a response
             res.status(201).json(newBook);
-          } catch (error) {
+        } catch (error) {
             console.log("Error uploading book:", error.message);
             res.status(500).json({ message: "Internal server error" });
-          }
-        },
+        }
+    },
       
       
     
