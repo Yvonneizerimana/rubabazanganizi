@@ -25,45 +25,49 @@ const firestore = getFirestore(app);
 const bookController = {
   
     uploadAndAddBook: async (req, res) => {
-        
-        if ( !req.files.book || !req.files.image) {
+        // Ensure both files are uploaded
+        if (!req.files || !req.files.book || !req.files.image) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
-
-         const { title, author, description, price, category } = req.body;
-        const bookFile = req.files.book;
-        const imageFile = req.files.image;
-
+    
+        // Extract other fields and the uploaded files
+        const { title, author, description, price, category } = req.body;
+        const bookFile = req.files.book;  // The book file
+        const imageFile = req.files.image;  // The image file
+    
         try {
-            
-            const bookStorageRef = ref(storage, 'uploads/books' + bookFile.name);
-            const bookSnapshot = await uploadBytes(bookStorageRef, file);
+            // Upload the book file to Firebase Storage
+            const bookStorageRef = ref(storage, 'uploads/books/' + bookFile.name);
+            const bookSnapshot = await uploadBytes(bookStorageRef, bookFile);  // Use bookFile here
             const bookDownloadUrl = await getDownloadURL(bookSnapshot.ref);
-            
-            const imageStorageRef = ref(storage, 'uploads/images' + imageFile.name);
-            const imageSnapshot = await uploadBytes(imageStorageRef, file);
+    
+            // Upload the image file to Firebase Storage
+            const imageStorageRef = ref(storage, 'uploads/images/' + imageFile.name);
+            const imageSnapshot = await uploadBytes(imageStorageRef, imageFile);  // Use imageFile here
             const imageDownloadUrl = await getDownloadURL(imageSnapshot.ref);
-            
+    
+            // Create a new book document with the download URLs
             const newBook = new bookModel({
                 title,
                 author,
                 description,
                 price,
                 category,
-                bookImage:imageDownloadUrl,
-                book: bookDownloadUrl,
-
+                bookImage: imageDownloadUrl,  // URL for the image
+                book: bookDownloadUrl,  // URL for the book file
             });
-
+    
+            // Save the new book document to the database
             await newBook.save();
-
+    
+            // Send the new book as a response
             res.status(201).json(newBook);
         } catch (error) {
             console.log("Error uploading book:", error.message);
             res.status(500).json({ message: "Internal server error" });
         }
     },
-
+    
     getAllBooks:async(req, res,next) => {
         try {
             const books = await bookModel.find({});
