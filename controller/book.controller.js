@@ -34,6 +34,23 @@ const bookController = {
         const { title, author, description, price, category } = req.body;
         const bookFile = req.files.book;  // The book file
         const imageFile = req.files.image;  // The image file
+
+        const allowedBookTypes = [
+            'application/pdf', 
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // Word Document (docx)
+        ];
+        // Allowed MIME types for image files
+        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    
+        // Validate the MIME type of the book file
+        if (!allowedBookTypes.includes(bookFile.mimetype)) {
+            return res.status(400).json({ message: 'Invalid book file type. Only PDF and Word files are allowed.' });
+        }
+    
+        // Validate the MIME type of the image file
+        if (!allowedImageTypes.includes(imageFile.mimetype)) {
+            return res.status(400).json({ message: 'Invalid image file type. Only JPEG, PNG, and JPG files are allowed.' });
+        }
     
         try {
             // Upload the book file to Firebase Storage
@@ -53,8 +70,8 @@ const bookController = {
                 description,
                 price,
                 category,
-                bookImage: imageDownloadUrl,  // URL for the image
-                book: bookDownloadUrl,  // URL for the book file
+                bookImage: imageDownloadUrl,  
+                book: bookDownloadUrl,  
             });
     
             // Save the new book document to the database
