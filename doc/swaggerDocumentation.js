@@ -226,13 +226,13 @@ const swaggerDocumentation={
                   required: true,
                 },
                 
-                {
-                  in: "formData",
-                  name: "file",
-                  type: "file",
-                  description: "upload book image ",
+                // {
+                //   in: "formData",
+                //   name: "file",
+                //   type: "file",
+                //   description: "upload book image ",
                   
-                },
+                // },
                 {
                   in: "formData",
                   name: "bookFile",

@@ -26,7 +26,7 @@ const bookController = {
   
     uploadAndAddBook: async (req, res) => {
         
-        if (!req.files || !req.files.book || !req.files.image) {
+        if ( !req.files.book || !req.files.image) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
