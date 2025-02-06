@@ -235,16 +235,16 @@ const swaggerDocumentation={
                 // },
                 {
                   in: "formData",
-                  name: "bookFile",
+                  name: "book",
                   type: "file",
                   description: "upload book",
                   
                 },
                 {
                   in: "formData",
-                  name: "imageFile",
+                  name: "image",
                   type: "file",
-                  description: "upload book image",
+                  description: "upload book",
                   
                 },
               ],
